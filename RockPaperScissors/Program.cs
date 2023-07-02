@@ -8,11 +8,17 @@ class Program
     {
         var gameState = InitialiseGame();
 
+        while (!gameState.IsFinished)
+        {
+            gameState = GameLoop(gameState);
+        }
+
+        Console.WriteLine("The game is finished!");
     }
 
     public static GameState InitialiseGame()
     {
-        var gameState = new GameState();    
+        var gameState = new GameState();
 
         var bestOf = CollectAndValidateBestOfInput();
         var playerOne = CollectAndValidatePlayerInput("Player One");
@@ -26,8 +32,202 @@ class Program
             GameMode = gameMode,
             PlayerOne = playerOne,
             PlayerTwo = playerTwo,
-            IsFinished = false            
+            IsFinished = false
         };
+    }
+
+    public static GameState GameLoop(GameState gameState)
+    {
+        // Player one decides move
+        var playerOneMove = MakeMove(gameState.GameMode, gameState.PlayerOne);
+
+        // Player two decides move
+        var playerTwoMove = MakeMove(gameState.GameMode, gameState.PlayerTwo);
+
+        gameState.PreviousMoves.Add(Tuple.Create(playerOneMove, playerTwoMove));
+
+        gameState = UpdateScores(gameState);
+
+        return gameState;
+    }
+
+    public static GameState UpdateScores(GameState gameState)
+    {
+        //Get the moves from the last round
+        var lastRound = gameState.PreviousMoves[gameState.PreviousMoves.Count - 1];
+        var playerOneMove = lastRound.Item1;
+        var playerTwoMove = lastRound.Item2;
+
+        //Calculate winner
+        switch (playerOneMove)
+        {
+            case Move.Rock:
+                if (playerTwoMove == Move.Paper || playerTwoMove == Move.Spock)
+                {
+                    gameState.PlayerTwoScore += 1;
+                    Console.WriteLine($"{gameState.PlayerTwo.Name} wins this round!");
+                }
+                else if (playerTwoMove == Move.Scissors || playerTwoMove == Move.Lizard)
+                {
+                    gameState.PlayerOneScore += 1;
+                    Console.WriteLine($"{gameState.PlayerOne.Name} wins this round!");
+                }
+                break;
+
+            case Move.Paper:
+                if (playerTwoMove == Move.Rock || playerTwoMove == Move.Spock)
+                {
+                    gameState.PlayerOneScore += 1;
+                    Console.WriteLine($"{gameState.PlayerOne.Name} wins this round!");
+                }
+                else if (playerTwoMove == Move.Scissors || playerTwoMove == Move.Lizard)
+                {
+                    gameState.PlayerTwoScore += 1;
+                    Console.WriteLine($"{gameState.PlayerTwo.Name} wins this round!");
+                }
+                break;
+
+            case Move.Scissors:
+                if (playerTwoMove == Move.Rock || playerTwoMove == Move.Spock)
+                {
+                    gameState.PlayerTwoScore += 1;
+                    Console.WriteLine($"{gameState.PlayerTwo.Name} wins this round!");
+                }
+                else if (playerTwoMove == Move.Paper || playerTwoMove == Move.Lizard)
+                {
+                    gameState.PlayerOneScore += 1;
+                    Console.WriteLine($"{gameState.PlayerOne.Name} wins this round!");
+                }
+                break;
+
+            case Move.Lizard:
+                if (playerTwoMove == Move.Rock || playerTwoMove == Move.Scissors)
+                {
+                    gameState.PlayerTwoScore += 1;
+                    Console.WriteLine($"{gameState.PlayerTwo.Name} wins this round!");
+                }
+                else if (playerTwoMove == Move.Paper || playerTwoMove == Move.Spock)
+                {
+                    gameState.PlayerOneScore += 1;
+                    Console.WriteLine($"{gameState.PlayerOne.Name} wins this round!");
+                }
+                break;
+
+            case Move.Spock:
+                if (playerTwoMove == Move.Paper || playerTwoMove == Move.Lizard)
+                {
+                    gameState.PlayerTwoScore += 1;
+                    Console.WriteLine($"{gameState.PlayerTwo.Name} wins this round!");
+                }
+                else if (playerTwoMove == Move.Rock || playerTwoMove == Move.Scissors)
+                {
+                    gameState.PlayerOneScore += 1;
+                    Console.WriteLine($"{gameState.PlayerOne.Name} wins this round!");
+                }
+                break;
+        }
+
+        Console.WriteLine($"Current Score");
+        Console.WriteLine($"{gameState.PlayerOne.Name}: {gameState.PlayerOneScore}");
+        Console.WriteLine($"{gameState.PlayerTwo.Name}: {gameState.PlayerTwoScore}");
+
+        double winningScore = (double)gameState.BestOf / 2.0;
+
+        if (gameState.PlayerOneScore > winningScore || gameState.PlayerTwoScore > winningScore)
+        {
+            gameState.IsFinished = true;
+        }
+
+        return gameState;
+    }
+
+    public static Move MakeMove(GameMode gameMode, Player player)
+    {
+        if (player.IsHuman)
+        {
+            return CollectAndValidatePlayerMoveInput(gameMode, player);
+        }
+        else
+        {
+            return GetRandomMove(gameMode, player);
+        }
+    }
+
+    public static Move GetRandomMove(GameMode gameMode, Player player)
+    {
+        Move[] moves;
+        if (gameMode == GameMode.Standard)
+        {
+            moves = new Move[] { Move.Rock, Move.Paper, Move.Scissors };
+        }
+        else
+        {
+            moves = new Move[] { Move.Rock, Move.Paper, Move.Scissors, Move.Lizard, Move.Spock };
+        }
+        Random random = new Random();
+        Move move = (Move)moves.GetValue(random.Next(moves.Length));
+        Console.WriteLine($"Player {player.Name} has picked {move}");
+        return move;
+    }
+
+
+    public static Move CollectAndValidatePlayerMoveInput(GameMode gameMode, Player player)
+    {
+        string options = "Rock, Paper, Scissors";
+        if (gameMode == GameMode.Extended)
+        {
+            options += ", Lizard, Spock";
+        }
+        Console.WriteLine($"{player.Name}, enter a move ({options}): ");
+        var moveInput = Console.ReadLine();
+        Console.Clear();
+
+        while (true)
+        {
+            Console.Clear();
+            switch (moveInput.Trim().ToLower())
+            {
+                case "rock":
+                    {
+                        return Move.Rock;
+                    }
+                case "paper":
+                    {
+                        return Move.Paper;
+                    }
+                case "scissors":
+                    {
+                        return Move.Scissors;
+                    }
+                case "lizard":
+                    {
+                        if (gameMode == GameMode.Extended)
+                        {
+                            return Move.Lizard;
+                        }
+                        else
+                        {
+                            Console.WriteLine("You can only select 'Lizard' if you play the extended version");
+                        }
+                        break;
+                    }
+                case "spock":
+                    {
+                        if (gameMode == GameMode.Extended)
+                        {
+                            return Move.Spock;
+                        }
+                        else
+                        {
+                            Console.WriteLine("You can only select 'Spock' if you play the extended version");
+                        }
+                        break;
+                    }
+            }
+            Console.WriteLine($"Incorrect input. Enter a move ({options}): ");
+            moveInput = Console.ReadLine();
+        }
+
     }
 
     public static int CollectAndValidateBestOfInput()
@@ -54,7 +254,7 @@ class Program
     public static Player CollectAndValidatePlayerInput(string playerNumber)
     {
         var player = new Player();
-        
+
         Console.WriteLine($"Enter the name of {playerNumber}...");
         player.Name = Console.ReadLine().Trim();
         Console.Clear();
@@ -80,7 +280,7 @@ class Program
             }
             Console.WriteLine($"Incorrect input. Do you want {player.Name} to be Human or AI controlled? Enter 'AI' or 'Human'");
             isHumanInput = Console.ReadLine();
-        } 
+        }
     }
 
     public static GameMode CollectAndValidateGameModeInput()
@@ -107,6 +307,3 @@ class Program
         }
     }
 }
-
-
-
