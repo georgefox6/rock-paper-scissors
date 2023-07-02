@@ -32,6 +32,7 @@ public class OutputRenderer
         Console.WriteLine($"The winner is... {gameState.PreviousRoundWinner.Name}");
         Console.ResetColor();
         Console.WriteLine($"The final score was {gameState.PlayerOneScore} - {gameState.PlayerTwoScore}");
+        Console.WriteLine($"The game lasted {gameState.TurnNumber} turns");
 
         var mostUsedMove = GetMostUsedMove(gameState.PreviousMoves);
 
