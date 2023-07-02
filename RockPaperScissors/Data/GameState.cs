@@ -89,6 +89,8 @@ public class GameState
                 break;
         }
 
+        TurnNumber++;
+
         double winningScore = (double)BestOf / 2.0;
 
         if (PlayerOneScore > winningScore || PlayerTwoScore > winningScore)
