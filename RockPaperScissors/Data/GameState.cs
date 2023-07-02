@@ -10,6 +10,7 @@ public class GameState
     public bool IsFinished { get; set; } = false;
     public int PlayerOneScore { get; set; } = 0;
     public int PlayerTwoScore { get; set; } = 0;
+    public Player PreviousRoundWinner { get; set; }
 
 
     public void UpdateScores()
@@ -26,12 +27,12 @@ public class GameState
                 if (playerTwoMove == Move.Paper || playerTwoMove == Move.Spock)
                 {
                     PlayerTwoScore += 1;
-                    Console.WriteLine($"{PlayerTwo.Name} wins this round!");
+                    PreviousRoundWinner = PlayerTwo;
                 }
                 else if (playerTwoMove == Move.Scissors || playerTwoMove == Move.Lizard)
                 {
                     PlayerOneScore += 1;
-                    Console.WriteLine($"{PlayerOne.Name} wins this round!");
+                    PreviousRoundWinner = PlayerOne;
                 }
                 break;
 
@@ -39,12 +40,12 @@ public class GameState
                 if (playerTwoMove == Move.Rock || playerTwoMove == Move.Spock)
                 {
                     PlayerOneScore += 1;
-                    Console.WriteLine($"{PlayerOne.Name} wins this round!");
+                    PreviousRoundWinner = PlayerOne;
                 }
                 else if (playerTwoMove == Move.Scissors || playerTwoMove == Move.Lizard)
                 {
                     PlayerTwoScore += 1;
-                    Console.WriteLine($"{PlayerTwo.Name} wins this round!");
+                    PreviousRoundWinner = PlayerTwo;
                 }
                 break;
 
@@ -52,12 +53,12 @@ public class GameState
                 if (playerTwoMove == Move.Rock || playerTwoMove == Move.Spock)
                 {
                     PlayerTwoScore += 1;
-                    Console.WriteLine($"{PlayerTwo.Name} wins this round!");
+                    PreviousRoundWinner = PlayerTwo;
                 }
                 else if (playerTwoMove == Move.Paper || playerTwoMove == Move.Lizard)
                 {
                     PlayerOneScore += 1;
-                    Console.WriteLine($"{PlayerOne.Name} wins this round!");
+                    PreviousRoundWinner = PlayerOne;
                 }
                 break;
 
@@ -65,7 +66,7 @@ public class GameState
                 if (playerTwoMove == Move.Rock || playerTwoMove == Move.Scissors)
                 {
                     PlayerTwoScore += 1;
-                    Console.WriteLine($"{PlayerTwo.Name} wins this round!");
+                    PreviousRoundWinner = PlayerTwo;
                 }
                 else if (playerTwoMove == Move.Paper || playerTwoMove == Move.Spock)
                 {
@@ -78,12 +79,12 @@ public class GameState
                 if (playerTwoMove == Move.Paper || playerTwoMove == Move.Lizard)
                 {
                     PlayerTwoScore += 1;
-                    Console.WriteLine($"{PlayerTwo.Name} wins this round!");
+                    PreviousRoundWinner = PlayerTwo;
                 }
                 else if (playerTwoMove == Move.Rock || playerTwoMove == Move.Scissors)
                 {
                     PlayerOneScore += 1;
-                    Console.WriteLine($"{PlayerOne.Name} wins this round!");
+                    PreviousRoundWinner = PlayerOne;
                 }
                 break;
         }

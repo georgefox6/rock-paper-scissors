@@ -1,4 +1,5 @@
 ﻿using RockPaperScissors.Data;
+using RockPaperScissors.Services;
 
 namespace RockPaperScissors;
 
@@ -11,9 +12,11 @@ class Program
         while (!gameState.IsFinished)
         {
             gameState = GameLoop(gameState);
+
+            OutputRenderer.RenderGameUpdate(gameState);
         }
 
-        Console.WriteLine("The game is finished!");
+        OutputRenderer.RenderGameFinished(gameState);
     }
 
     public static GameState InitialiseGame()
@@ -46,7 +49,6 @@ class Program
 
         gameState.PreviousMoves.Add(Tuple.Create(playerOneMove, playerTwoMove));
 
-        //gameState = UpdateScores(gameState);
         gameState.UpdateScores();
 
         return gameState;
@@ -76,7 +78,6 @@ class Program
         }
         Random random = new Random();
         Move move = (Move)moves.GetValue(random.Next(moves.Length));
-        Console.WriteLine($"Player {player.Name} has picked {move}");
         return move;
     }
 
