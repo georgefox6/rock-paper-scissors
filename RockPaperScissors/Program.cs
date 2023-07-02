@@ -46,101 +46,11 @@ class Program
 
         gameState.PreviousMoves.Add(Tuple.Create(playerOneMove, playerTwoMove));
 
-        gameState = UpdateScores(gameState);
+        //gameState = UpdateScores(gameState);
+        gameState.UpdateScores();
 
         return gameState;
     }
-
-    public static GameState UpdateScores(GameState gameState)
-    {
-        //Get the moves from the last round
-        var lastRound = gameState.PreviousMoves[gameState.PreviousMoves.Count - 1];
-        var playerOneMove = lastRound.Item1;
-        var playerTwoMove = lastRound.Item2;
-
-        //Calculate winner
-        switch (playerOneMove)
-        {
-            case Move.Rock:
-                if (playerTwoMove == Move.Paper || playerTwoMove == Move.Spock)
-                {
-                    gameState.PlayerTwoScore += 1;
-                    Console.WriteLine($"{gameState.PlayerTwo.Name} wins this round!");
-                }
-                else if (playerTwoMove == Move.Scissors || playerTwoMove == Move.Lizard)
-                {
-                    gameState.PlayerOneScore += 1;
-                    Console.WriteLine($"{gameState.PlayerOne.Name} wins this round!");
-                }
-                break;
-
-            case Move.Paper:
-                if (playerTwoMove == Move.Rock || playerTwoMove == Move.Spock)
-                {
-                    gameState.PlayerOneScore += 1;
-                    Console.WriteLine($"{gameState.PlayerOne.Name} wins this round!");
-                }
-                else if (playerTwoMove == Move.Scissors || playerTwoMove == Move.Lizard)
-                {
-                    gameState.PlayerTwoScore += 1;
-                    Console.WriteLine($"{gameState.PlayerTwo.Name} wins this round!");
-                }
-                break;
-
-            case Move.Scissors:
-                if (playerTwoMove == Move.Rock || playerTwoMove == Move.Spock)
-                {
-                    gameState.PlayerTwoScore += 1;
-                    Console.WriteLine($"{gameState.PlayerTwo.Name} wins this round!");
-                }
-                else if (playerTwoMove == Move.Paper || playerTwoMove == Move.Lizard)
-                {
-                    gameState.PlayerOneScore += 1;
-                    Console.WriteLine($"{gameState.PlayerOne.Name} wins this round!");
-                }
-                break;
-
-            case Move.Lizard:
-                if (playerTwoMove == Move.Rock || playerTwoMove == Move.Scissors)
-                {
-                    gameState.PlayerTwoScore += 1;
-                    Console.WriteLine($"{gameState.PlayerTwo.Name} wins this round!");
-                }
-                else if (playerTwoMove == Move.Paper || playerTwoMove == Move.Spock)
-                {
-                    gameState.PlayerOneScore += 1;
-                    Console.WriteLine($"{gameState.PlayerOne.Name} wins this round!");
-                }
-                break;
-
-            case Move.Spock:
-                if (playerTwoMove == Move.Paper || playerTwoMove == Move.Lizard)
-                {
-                    gameState.PlayerTwoScore += 1;
-                    Console.WriteLine($"{gameState.PlayerTwo.Name} wins this round!");
-                }
-                else if (playerTwoMove == Move.Rock || playerTwoMove == Move.Scissors)
-                {
-                    gameState.PlayerOneScore += 1;
-                    Console.WriteLine($"{gameState.PlayerOne.Name} wins this round!");
-                }
-                break;
-        }
-
-        Console.WriteLine($"Current Score");
-        Console.WriteLine($"{gameState.PlayerOne.Name}: {gameState.PlayerOneScore}");
-        Console.WriteLine($"{gameState.PlayerTwo.Name}: {gameState.PlayerTwoScore}");
-
-        double winningScore = (double)gameState.BestOf / 2.0;
-
-        if (gameState.PlayerOneScore > winningScore || gameState.PlayerTwoScore > winningScore)
-        {
-            gameState.IsFinished = true;
-        }
-
-        return gameState;
-    }
-
     public static Move MakeMove(GameMode gameMode, Player player)
     {
         if (player.IsHuman)
