@@ -89,10 +89,6 @@ public class GameState
                 break;
         }
 
-        Console.WriteLine($"Current Score");
-        Console.WriteLine($"{PlayerOne.Name}: {PlayerOneScore}");
-        Console.WriteLine($"{PlayerTwo.Name}: {PlayerTwoScore}");
-
         double winningScore = (double)BestOf / 2.0;
 
         if (PlayerOneScore > winningScore || PlayerTwoScore > winningScore)
