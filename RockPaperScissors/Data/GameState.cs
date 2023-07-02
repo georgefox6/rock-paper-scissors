@@ -10,6 +10,95 @@ public class GameState
     public bool IsFinished { get; set; } = false;
     public int PlayerOneScore { get; set; } = 0;
     public int PlayerTwoScore { get; set; } = 0;
+
+
+    public void UpdateScores()
+    {
+        //Get the moves from the last round
+        var lastRound = PreviousMoves[PreviousMoves.Count - 1];
+        var playerOneMove = lastRound.Item1;
+        var playerTwoMove = lastRound.Item2;
+
+        //Calculate winner
+        switch (playerOneMove)
+        {
+            case Move.Rock:
+                if (playerTwoMove == Move.Paper || playerTwoMove == Move.Spock)
+                {
+                    PlayerTwoScore += 1;
+                    Console.WriteLine($"{PlayerTwo.Name} wins this round!");
+                }
+                else if (playerTwoMove == Move.Scissors || playerTwoMove == Move.Lizard)
+                {
+                    PlayerOneScore += 1;
+                    Console.WriteLine($"{PlayerOne.Name} wins this round!");
+                }
+                break;
+
+            case Move.Paper:
+                if (playerTwoMove == Move.Rock || playerTwoMove == Move.Spock)
+                {
+                    PlayerOneScore += 1;
+                    Console.WriteLine($"{PlayerOne.Name} wins this round!");
+                }
+                else if (playerTwoMove == Move.Scissors || playerTwoMove == Move.Lizard)
+                {
+                    PlayerTwoScore += 1;
+                    Console.WriteLine($"{PlayerTwo.Name} wins this round!");
+                }
+                break;
+
+            case Move.Scissors:
+                if (playerTwoMove == Move.Rock || playerTwoMove == Move.Spock)
+                {
+                    PlayerTwoScore += 1;
+                    Console.WriteLine($"{PlayerTwo.Name} wins this round!");
+                }
+                else if (playerTwoMove == Move.Paper || playerTwoMove == Move.Lizard)
+                {
+                    PlayerOneScore += 1;
+                    Console.WriteLine($"{PlayerOne.Name} wins this round!");
+                }
+                break;
+
+            case Move.Lizard:
+                if (playerTwoMove == Move.Rock || playerTwoMove == Move.Scissors)
+                {
+                    PlayerTwoScore += 1;
+                    Console.WriteLine($"{PlayerTwo.Name} wins this round!");
+                }
+                else if (playerTwoMove == Move.Paper || playerTwoMove == Move.Spock)
+                {
+                    PlayerOneScore += 1;
+                    Console.WriteLine($"{PlayerOne.Name} wins this round!");
+                }
+                break;
+
+            case Move.Spock:
+                if (playerTwoMove == Move.Paper || playerTwoMove == Move.Lizard)
+                {
+                    PlayerTwoScore += 1;
+                    Console.WriteLine($"{PlayerTwo.Name} wins this round!");
+                }
+                else if (playerTwoMove == Move.Rock || playerTwoMove == Move.Scissors)
+                {
+                    PlayerOneScore += 1;
+                    Console.WriteLine($"{PlayerOne.Name} wins this round!");
+                }
+                break;
+        }
+
+        Console.WriteLine($"Current Score");
+        Console.WriteLine($"{PlayerOne.Name}: {PlayerOneScore}");
+        Console.WriteLine($"{PlayerTwo.Name}: {PlayerTwoScore}");
+
+        double winningScore = (double)BestOf / 2.0;
+
+        if (PlayerOneScore > winningScore || PlayerTwoScore > winningScore)
+        {
+            IsFinished = true;
+        }
+    }
 }
 
 public enum GameMode
